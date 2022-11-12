@@ -38,7 +38,7 @@ include "header.php";
                                 <tr>
                                     <td>$Item_Id</td>
                                     <td>$value[Item_Name]</td>
-                                    <td>$value[Price]<input type='hidden' class='iprice' value='$value[Price]' ></td>
+                                    <td>$value[Price]<input type='hidden' class='iprice' value='$value[Price]'></td>
                                     <td><input type='number' class='iquantity text-center' onchange='subTotal()' value='$value[Quantity]' min='1' max='10'></td>
                                     <td class='itotal'></td>
                                     <td>
@@ -59,21 +59,35 @@ include "header.php";
                     <h4>Total:</h4>
                     <h5 class="text-right" id="gtotal"></h5>
                     <br>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                            PayBal
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                        <label class="form-check-label" for="flexRadioDefault2">
-                            Credit Card
-                        </label>
-                    </div>
-                    <form action="">
-                        <button class="btn btn-primary btn-block">Check Out</button>
-                    </form>
+                    <?php
+                    if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
+                    ?>
+                        <form action="checkout.php" method="POST">
+                            <div class="form-group">
+                                <label for="">Full Name</label>
+                                <input class="form-control" name="Full_name" type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Phone Number</label>
+                                <input class="form-control" name="Phone_num" type="number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Adress</label>
+                                <input class="form-control" name="Adress" type="text" required>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="Pay_Mode" value="COD" id="flexRadioDefault2" checked>
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    Cash On Delivery
+                                </label>
+                            </div>
+                            <button class="btn btn-primary btn-block mt-2" name="checkout">Check Out</button>
+                        </form>
+                    <?php
+                    } else {
+                        echo "<h4 class='text-center'>Your cart is empty</h4>";
+                    }
+                    ?>
                 </div>
             </div>
         </div>
@@ -88,7 +102,7 @@ include "header.php";
 
         function subTotal() {
             gt = 0;
-            for (let i = 0; i < iprice.length; i++) {
+            for (i = 0; i < iprice.length; i++) {
                 itotal[i].innerText = (iprice[i].value) * (iquantity[i].value);
 
                 gt = gt + (iprice[i].value) * (iquantity[i].value);
