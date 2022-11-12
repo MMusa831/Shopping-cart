@@ -26,21 +26,21 @@ include "header.php";
                             <th scope="col">Item Name</th>
                             <th scope="col">Price</th>
                             <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
                         </tr>
                     </thead>
                     <tbody class="text-center">
                         <?php
-                        $total = 0;
                         if (isset($_SESSION['cart'])) {
                             foreach ($_SESSION['cart'] as $key => $value) {
-                                $total = $total + $value['Price'];
                                 $Item_Id = $key + 1;
                                 echo "
                                 <tr>
                                     <td>$Item_Id</td>
                                     <td>$value[Item_Name]</td>
-                                    <td>$value[Price]</td>
-                                    <td><input type='number' class='text-center' value='$value[Quantity]' min='1' max='10'></td>
+                                    <td>$value[Price]<input type='hidden' class='iprice' value='$value[Price]' ></td>
+                                    <td><input type='number' class='iquantity text-center' onchange='subTotal()' value='$value[Quantity]' min='1' max='10'></td>
+                                    <td class='itotal'></td>
                                     <td>
                                       <form action='proccess_cart.php' method='POST'>
                                         <button class='btn' name='Remove_Item'><i class='fa-solid fa-trash-can' style='color: red;'></i></button>
@@ -57,7 +57,7 @@ include "header.php";
             <div class="col-lg-3">
                 <div class="border p-4 bg-light rounded">
                     <h4>Total:</h4>
-                    <h5 class="text-right"><?php echo $total ?></h5>
+                    <h5 class="text-right" id="gtotal"></h5>
                     <br>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
@@ -78,6 +78,26 @@ include "header.php";
             </div>
         </div>
     </div>
+
+    <script>
+        var gt = 0;
+        var iprice = document.getElementsByClassName('iprice');
+        var iquantity = document.getElementsByClassName('iquantity');
+        var itotal = document.getElementsByClassName('itotal');
+        var gtotal = document.getElementById('gtotal');
+
+        function subTotal() {
+            gt = 0;
+            for (let i = 0; i < iprice.length; i++) {
+                itotal[i].innerText = (iprice[i].value) * (iquantity[i].value);
+
+                gt = gt + (iprice[i].value) * (iquantity[i].value);
+            }
+            gtotal.innerText = gt;
+
+        }
+        subTotal();
+    </script>
 </body>
 
 </html>
